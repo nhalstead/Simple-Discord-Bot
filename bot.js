@@ -33,7 +33,7 @@ client.on('message', inMsg => {
   }
   
   if (inMsg.content.toLowerCase() === 'i hate you') {
-    c("Sent Message to " + inMsg.author.name);
+    c("Sent Message to " + inMsg.author.username);
     s(inMsg, "Can we be Friends?");
   }
 
