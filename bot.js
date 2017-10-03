@@ -19,6 +19,9 @@ client.on('ready', () => {
 
 // Event Listeners
 client.on('message', inMsg => {
+  // It's good practice to ignore other bots.
+  if(inMsg.author.bot) return;
+  
   if (inMsg.content.toLowerCase() === 'ping') {
     e(inMsg, "PONG!");
   }
