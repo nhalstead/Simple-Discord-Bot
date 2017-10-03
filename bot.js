@@ -75,7 +75,7 @@ client.on('message', inMsg => {
 	  },
 	  title: "Commands for Simple Discord Bot",
       url: "http://sdbot.ml/",
-      description: "Here are the List of Commands the the Bot Supports:",
+      description: "List of Commands the the Bot Supports",
       fields: [{
         name: "`online?`",
         value: "Tells you the amount of Users detected by the Bot in all of the servers it is on."
@@ -85,7 +85,7 @@ client.on('message', inMsg => {
         value: "Messages you letting you know that it wants to be friends with you!"
       },
       {
-        name: "hello",
+        name: "`hello`",
         value: "Says Hi back yo you!"
       }
     ],
