@@ -1,10 +1,12 @@
 // Call all needed Packages
 var fs = require("fs");
 const Discord = require("discord.js");
+const time = require("moment");
 
 // Setup Variables 
 var client = new Discord.Client();
 var config = JSON.parse(fs.readFileSync("config.json"));
+config.debug = true;
 var botId = "";
 var AuthLink = "https://discordapp.com/oauth2/authorize?&client_id="+config.appId+"&scope=bot&permissions=0";
 console.log("Starting Bot...\n");
@@ -13,10 +15,18 @@ console.log("Starting Bot...\n");
 // Single One and Done Actions after the Bot has been started and checked in with the Discord API Servers.
 client.on('ready', () => {
   console.log(`Logged in as ${client.user.tag}!`);
-  console.log("Add me to your Server! - " + AuthLink);
+  
+  if(config.debug) {
+	console.log("\nMODE CHANGE: Debug Mode Enabled!\n");
+	console.log("DEBUG START TIME: " + timeD() + " = " + client.uptime);
+	d("Add me to your Server! - " + AuthLink);
+  }
+  
   console.log("\n---- Bot: Online!\n ");
   //client.user.setGame('Offline!');
   client.user.setGame(`on ` + client.guilds.size + ` servers`);
+  client.user.setGame(`with ` + client.users.size + ` Users`);
+  
   botId = config.id;
   
   var bootUpGeneral = client.channels.get('364594803482034179');
@@ -26,6 +36,25 @@ client.on('ready', () => {
 
 
 // Event Listeners
+client.on("guildCreate", guild => {
+  // This event triggers when the bot joins a guild.
+  client.user.setGame(`with ` + client.users.size + ` Users`);
+});
+
+client.on("guildDelete", guild => {
+  // this event triggers when the bot is removed from a guild.
+  client.user.setGame(`with ` + client.users.size + ` Users`);
+});
+
+
+client.on('typingStart', (channel, user) => {
+  try{
+    d( timeD() +": "+user.username + " is typing in " + channel.guild.name + "/" + channel.name);
+    //channel.send(`~ ${user.username} is typing in ${channel.name}`);
+  }
+  catch (e){}
+});
+
 client.on('message', inMsg => {
   // Selected Auth
   if(inMsg.author.id === "329459428304617475"){
@@ -36,12 +65,16 @@ client.on('message', inMsg => {
   }
   
   // It's good practice to ignore other bots.
-  if (inMsg.channel.isPrivate) { console.log(`(Private) ${inMsg.author.name}: ${inMsg.content}`); }
+  if (inMsg.isPrivate == true) { console.log(`(Private) ${inMsg.author.name}: ${inMsg.content}`); }
   else if(inMsg.author.bot) return;
   
   
   // Text Based Commands
   else if (inMsg.content.toLowerCase() === 'online?') {
+    e(inMsg, "Yup, I have been on for " + m2ms(client.uptime));
+  }
+  
+  else if (inMsg.content.toLowerCase().match("(^time|^what time is it|^"+config.prefix+"bottime)")) {
     e(inMsg, "Yup, I have been on for " + m2ms(client.uptime));
   }
   
@@ -149,7 +182,9 @@ client.on('message', inMsg => {
   function es(i) { client.sendMessage(i); }
   function s(c, i) { if (i !== "") { c.author.send(i); } }
   function c(m){ console.log("INFO: " + m); }
-
+  function d(m) { if(config.debug === true) { console.log(client.uptime + " DEBUG: " + m); }}
+  function timeD() { return time().format('MMMM Do YYYY, h:mm:ss a'); }
+  
   // https://stackoverflow.com/a/21294619
   function m2ms(i) {
     var m = Math.floor(i / 60000);
