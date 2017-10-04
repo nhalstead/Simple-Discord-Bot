@@ -49,10 +49,10 @@ client.on("guildDelete", guild => {
 
 client.on('typingStart', (channel, user) => {
   try{
-    d( timeD() +": "+user.username + " is typing in " + channel.guild.name + "/" + channel.name);
+    d( timeD() +": "+user.username + " #" + user.discriminator + " is typing in " + channel.guild.name + "/" + channel.name);
     //channel.send(`~ ${user.username} is typing in ${channel.name}`);
   }
-  catch (e){}
+  catch (e){ d("Had a TryCatch error in the TypeingStart Handle"); }
 });
 
 client.on('message', inMsg => {
@@ -67,6 +67,12 @@ client.on('message', inMsg => {
   // It's good practice to ignore other bots.
   if (inMsg.isPrivate == true) { console.log(`(Private) ${inMsg.author.name}: ${inMsg.content}`); }
   else if(inMsg.author.bot) return;
+  
+  if (!inMsg.guild) { //Checking if it from a server or not
+    d("[PM]  " + inMsg.author.username + " #" + inMsg.author.discriminator + ": " + inMsg.content); //optional
+    //wheretosend.send(message.author.username + ": " + mes); //wheretosend is my variable. Just choose a server and a channel ID
+    return;
+  }
   
   
   // Text Based Commands
@@ -150,6 +156,10 @@ client.on('message', inMsg => {
     }});
   }
   
+  else if(inMsg.content.toLowerCase().match("^yes(.?|.{2,32})$") ) {
+	e(inMsg, "no");
+  }
+  
   else if(inMsg.content.toLowerCase() === config.prefix+"users") {
 	e(inMsg, client.users.size + " users attached to this the Bot. ("+client.guilds.size +" on this Server)");
   }
@@ -182,7 +192,7 @@ client.on('message', inMsg => {
   function es(i) { client.sendMessage(i); }
   function s(c, i) { if (i !== "") { c.author.send(i); } }
   function c(m){ console.log("INFO: " + m); }
-  function d(m) { if(config.debug === true) { console.log(client.uptime + " DEBUG: " + m); }}
+  function d(m) { if(config.debug === true) { console.log(" DEBUG: " + m); }}
   function timeD() { return time().format('MMMM Do YYYY, h:mm:ss a'); }
   
   // https://stackoverflow.com/a/21294619
