@@ -90,7 +90,6 @@ client.on('message', inMsg => {
 		"Hi",
 		"Hola",
 		"Hello",
-		"",
 		"Meep"
 	];
     e(inMsg, arraygr(a));
