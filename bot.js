@@ -80,8 +80,12 @@ client.on('message', inMsg => {
     e(inMsg, "Yup, I have been on for " + m2ms(client.uptime));
   }
   
+  else if (inMsg.content.toLowerCase().includes("...")) {
+    e(inMsg, "...");
+  }
+  
   else if (inMsg.content.toLowerCase().match("(^time|^what time is it|^"+config.prefix+"bottime)")) {
-    e(inMsg, "Yup, I have been on for " + m2ms(client.uptime));
+    e(inMsg, "It is " + timeT());
   }
   
   else if (inMsg.content.toLowerCase().match("(^hello|^hi|^yo|^sup|^anyone on)")) {
@@ -193,6 +197,8 @@ client.on('message', inMsg => {
   function c(m){ console.log("INFO: " + m); }
   function d(m) { if(config.debug === true) { console.log(" DEBUG: " + m); }}
   function timeD() { return time().format('MMMM Do YYYY, h:mm:ss a'); }
+  function timeT() { return time().format('l - h:mm A') + " EST"; }
+  function importJson(f){ return JSON.parse(fs.readFileSync(f)); }
   
   // https://stackoverflow.com/a/21294619
   function m2ms(i) {
