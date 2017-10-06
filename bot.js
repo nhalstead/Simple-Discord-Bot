@@ -2,6 +2,7 @@
 var fs = require("fs");
 const Discord = require("discord.js");
 const time = require("moment");
+var colors = require('colors');
 
 // Setup Variables 
 var client = new Discord.Client();
@@ -62,6 +63,15 @@ client.on('message', inMsg => {
 	  e(inMsg, "Ok, Bye :crying_cat_face:");
       setTimeout(function(){ process.exit(); }, 1000);
     }
+	
+	if (inMsg.content.toLowerCase() === 'bot.reload') {
+	  d("Reloading Config ~ Triggered by: " + inMsg.author.username);
+	  e(inMsg, ":warning: Reloading Config... :warning:");
+	  var ds = config.debug;
+      config = JSON.parse(fs.readFileSync("config.json"));
+	  config.debug = ds;
+    }
+	
   }
   
   // It's good practice to ignore other bots.
@@ -195,7 +205,7 @@ client.on('message', inMsg => {
   function es(i) { client.sendMessage(i); }
   function s(c, i) { if (i !== "") { c.author.send(i); } }
   function c(m){ console.log("INFO: " + m); }
-  function d(m) { if(config.debug === true) { console.log(" DEBUG: " + m); }}
+  function d(m) { if(config.debug === true) { console.log(" DEBUG: ".yellow + m.cyan); }}
   function timeD() { return time().format('MMMM Do YYYY, h:mm:ss a'); }
   function timeT() { return time().format('l - h:mm A') + " EST"; }
   function importJson(f){ return JSON.parse(fs.readFileSync(f)); }
