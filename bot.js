@@ -10,20 +10,20 @@ var config = JSON.parse(fs.readFileSync("config.json"));
 config.debug = true;
 var botId = "";
 var AuthLink = "https://discordapp.com/oauth2/authorize?&client_id="+config.appId+"&scope=bot&permissions=0";
-console.log("Starting Bot...\n");
+console.log("Starting Bot...".bold);
 
 
 // Single One and Done Actions after the Bot has been started and checked in with the Discord API Servers.
 client.on('ready', () => {
-  console.log(`Logged in as ${client.user.tag}!`);
+  console.log(` Logged in as ${client.user.tag}! `.underline.white.bgCyan);
   
   if(config.debug) {
-	console.log("\nMODE CHANGE: Debug Mode Enabled!\n");
-	console.log("DEBUG START TIME: " + timeD() + " = " + client.uptime);
+	console.log("\nMODE CHANGE: Debug Mode Enabled!".red);
+	console.log(("DEBUG START TIME: " + timeD() + " = " + client.uptime).red);
 	d("Add me to your Server! - " + AuthLink);
   }
   
-  console.log("\n---- Bot: Online!\n ");
+  console.log("\n ---- Bot: Online! \n".white.bgCyan);
   //client.user.setGame('Offline!');
   client.user.setGame(`on ` + client.guilds.size + ` servers`);
   client.user.setGame(`with ` + client.users.size + ` Users`);
