@@ -206,7 +206,7 @@ client.on('message', inMsg => {
   function s(c, i) { if (i !== "") { c.author.send(i); } }
   function c(m){ console.log("INFO: " + m); }
   function d(m) { if(config.debug === true) { console.log(" DEBUG: ".yellow + m.cyan); }}
-  function m(m) { if(config.debug === true) { console.log("   MSG: ".yellow + m.cyan); }}
+  function m(m) { if(config.pmmessage === true) { console.log("   MSG: ".yellow + m.cyan); }}
   function timeD() { return time().format('MMMM Do YYYY, h:mm:ss a'); }
   function timeT() { return time().format('l - h:mm A') + " EST"; }
   function importJson(f){ return JSON.parse(fs.readFileSync(f)); }

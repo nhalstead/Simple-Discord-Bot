@@ -2,5 +2,6 @@
   "appId": "",
   "token": "",
   "nick": "",	
-  "prefix": "-"
+  "prefix": "",
+  "pmmessage": true
 }
