@@ -53,7 +53,7 @@ client.on('typingStart', (channel, user) => {
     d( timeD() +": "+user.username + " #" + user.discriminator + " is typing in " + channel.guild.name + "/" + channel.name);
     //channel.send(`~ ${user.username} is typing in ${channel.name}`);
   }
-  catch (e){ d("Had a TryCatch error in the TypeingStart Handle"); }
+  catch (e){ d("Had a TryCatch error in the `typingStart` Handle, Must be a Private Message Conversation!!"); }
 });
 
 client.on('message', inMsg => {
@@ -79,9 +79,9 @@ client.on('message', inMsg => {
   else if(inMsg.author.bot) return;
   
   if (!inMsg.guild) { //Checking if it from a server or not
-    d("[PM]  " + inMsg.author.username + " #" + inMsg.author.discriminator + ": " + inMsg.content); //optional
+    m(inMsg.author.username + " #" + inMsg.author.discriminator + ": " + inMsg.content); //optional
     //wheretosend.send(message.author.username + ": " + mes); //wheretosend is my variable. Just choose a server and a channel ID
-    return;
+    return; // Comment out to Allow for Commands to be Run via the PMs.
   }
   
   
@@ -206,6 +206,7 @@ client.on('message', inMsg => {
   function s(c, i) { if (i !== "") { c.author.send(i); } }
   function c(m){ console.log("INFO: " + m); }
   function d(m) { if(config.debug === true) { console.log(" DEBUG: ".yellow + m.cyan); }}
+  function m(m) { if(config.debug === true) { console.log("   MSG: ".yellow + m.cyan); }}
   function timeD() { return time().format('MMMM Do YYYY, h:mm:ss a'); }
   function timeT() { return time().format('l - h:mm A') + " EST"; }
   function importJson(f){ return JSON.parse(fs.readFileSync(f)); }
