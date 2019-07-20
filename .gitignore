@@ -57,3 +57,11 @@ typings/
 # dotenv environment variables file
 .env
 
+.idea/jsLibraryMappings.xml
+.idea/misc.xml
+.idea/modules.xml
+.idea/Simple-Discord-Bot.iml
+.idea/vcs.xml
+package-lock.json
+src/config/local.js
+.idea/workspace.xml
