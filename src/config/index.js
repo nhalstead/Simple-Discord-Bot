@@ -1,5 +1,21 @@
 const _ = require('lodash');
 
+const getEnvConfig = () => {
+	if(!process.env.NODE_ENV){
+		return require('./default');
+	}
+	else {
+		// Load by NODE_ENV tag
+		try {
+			return require('./' + process.env.NODE_ENV)
+		}
+		catch (e) {
+			console.error("Failed to load ENV Config: " + './' + process.env.NODE_ENV);
+			return {};
+		}
+	}
+};
+
 module.exports = _.extend(
 	{
 		prefix: "sdb",
@@ -15,5 +31,5 @@ module.exports = _.extend(
 			token: process.env.DISCORD_TOKEN || ""
 		}
 	},
-	(!process.env.NODE_ENV) ? require('./default') : require('./' + process.env.NODE_ENV),
+	getEnvConfig(),
 );

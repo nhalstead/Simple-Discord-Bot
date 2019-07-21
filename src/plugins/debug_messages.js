@@ -5,7 +5,7 @@ const {d, e, c } = require('../server/tools');
 module.exports = function(client) {
 
 	client.on('message', inMsg => {
-		d(inMsg.content);
+		d(inMsg.author.id + " " + inMsg.content);
 	});
 
 };

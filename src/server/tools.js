@@ -2,13 +2,14 @@ const fs = require("fs");
 const time = require("moment");
 const colors = require('colors');
 const config = require('../config');
+const Promise = require('bluebird');
 const { DMChannel, TextChannel, GroupDMChannel } = require("discord.js");
 
 module.exports =  {
 	/**
 	 * Echo to Channel
 	 *
-	 * @param {Object} channel Channel Object
+	 * @param {Message} channel Channel Object
 	 * @param {string} message Message to Send to the Channel
 	 */
 	e: (channel, message) => {
@@ -20,23 +21,14 @@ module.exports =  {
 	},
 
 	/**
-	 * Send Message
+	 * Send PM from a message received.
 	 *
-	 * @param {string} message Message to Send
+	 * @param {Message} Message
+	 * @param {string} response Message to send.
 	 */
-	es: (message) => {
-		client.sendMessage(message);
-	},
-
-	/**
-	 * Send message in response to Message
-	 *
-	 * @param {Object} c
-	 * @param {string} message Message to send.
-	 */
-	s: (c, message) => {
-		if (message !== "" && typeof message == "string") {
-			c.author.send(message);
+	s: (message, response) => {
+		if (response !== "" && typeof response == "string") {
+			message.author.send(response);
 		}
 	},
 
@@ -188,6 +180,55 @@ module.exports =  {
 	 */
 	isBot: (message) => {
 		return (message.author.bot === true);
+	},
+
+	/**
+	 * Get Message Value
+	 *
+	 * @param {Message} message Discord Message
+	 * @return {Boolean} Is the message from a Robot
+	 */
+	messageValue: (message) => {
+		return message.content;
+	},
+
+	/**
+	 * Delete a Message
+	 * Using `async` and `await` to handle the promise return.
+	 *
+	 * @param {Message} message Discord Message
+	 * @return {Boolean} If the message was deleted
+	 */
+	deleteMessage: async (message) => {
+		if (message.deletable == true) {
+			await message.delete();
+			return true;
+		}
+		return false;
+	},
+
+	/**
+	 * Reply to a message that was given.
+	 * This will take any of the Channel Types, DMChannel, GroupDMChannel, TextChannel
+	 *
+	 * @param {Message} message Message Object
+	 * @param {string|Object} response The Reply to the message
+	 * @param {MessageOptions, Attachment, RichEmbed} options See https://discord.js.org/#/docs/main/stable/class/TextChannel?scrollTo=send
+	 */
+	reply: (message, response, options = undefined) => {
+		message.channel.send(response, options);
+	},
+
+	/**
+	 * Reply to the message Owner
+	 * This will take any of the Channel Types, DMChannel, GroupDMChannel, TextChannel
+	 *
+	 * @param {Message} message Message Object
+	 * @param {string|Object} response The Reply to the message
+	 * @param {MessageOptions, Attachment, RichEmbed} options See https://discord.js.org/#/docs/main/stable/class/TextChannel?scrollTo=send
+	 */
+	replyInPM: (message, response, options = undefined) => {
+		message.author.send(response, options);
 	}
 
 };

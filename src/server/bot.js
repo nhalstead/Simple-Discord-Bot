@@ -1,7 +1,7 @@
 'use strict';
 
 const config = require('../config');
-const {timeD, d, e, is_root, c, m, m2ms, s, random, isDM} = require('./tools');
+const { timeD, d, e, is_root, c, m, m2ms, s, random, isDM, isBot, timeT } = require('./tools');
 const Discord = require("discord.js");
 const client = new Discord.Client();
 const fs = require("fs");
@@ -30,7 +30,6 @@ client.on('ready', () => {
 		d("Add me to your Server! - " + AuthLink);
 	}
 	console.log(" Bot: Online! ".black.bgCyan);
-	client.user.setActivity("... Something");
 
 	if(config.webAdmin.enabled === true){
 		console.log(" Web Server Enabled. ".black.bgCyan);
@@ -64,15 +63,6 @@ client.on('message', inMsg => {
 			client.user.setActivity(str);
 			return;
 		}
-
-	}
-
-
-	if (inMsg.content.toLowerCase() === 'bot.users') {
-		client.user.setActivity(`with ` + client.users.size + ` Users`);
-	}
-	else if (inMsg.content.toLowerCase() === 'bot.servers') {
-		client.user.setActivity(`on ` + client.guilds.size + ` servers`);
 	}
 
 	// else if(inMsg.content.toLowerCase() === 'bot.f') {
@@ -121,7 +111,7 @@ client.on('message', inMsg => {
 	if(isDM(inMsg)) {
 		console.log(`(Private) ${inMsg.author.username}: ${inMsg.content}`);
 	}
-	else if(inMsg.author.bot) return;
+	else if(isBot(inMsg)) return;
 	else if (!inMsg.guild) { //Checking if it from a server or from a PM
 		m(inMsg.author.username + " #" + inMsg.author.discriminator + ": " + inMsg.content); //optional
 
@@ -144,67 +134,29 @@ client.on('message', inMsg => {
 		e(inMsg, "It is " + timeT());
 	}
 
-	else if (inMsg.content.toLowerCase().match("(^hello|^hi|^yo|^sup|^anyone on)")) {
-		// Using the Regex I made: https://regex101.com/r/jhfhCa/1
-		var a = [
-			"Hi",
-			"Hola",
-			"Hello",
-			"Meep"
-		];
-		e(inMsg, random(a));
-	}
-
 	else if (inMsg.content.toLowerCase().match("meep")) {
 		e(inMsg, "...");
 	}
 
-	else if (inMsg.content.toLowerCase().match("^i hate you((.?|.{2,32})$)")) {
-		// Uing the Regex I made: https://regex101.com/r/5gk2pI/2
-		c("Sent Message to " + inMsg.author.username);
-		s(inMsg, "Can we be Friends?");
-		e(inMsg, "Are you sure? I'd Like to be friends!");
-	}
-
-	else if(inMsg.content.toLowerCase() === config.prefix+"botuser") {
-	inMsg.channel.send({embed: {
-			color: 3447003,
-		author: {
-			name: client.user.username,
-			icon_url: client.user.avatarURL
-		}
-		}});
-	}
-
 	else if(inMsg.content.toLowerCase() === config.prefix+"credit") {
-	inMsg.channel.send({embed: {
-			color: 3447003,
-		author: {
-			name: "nhalstead",
-			icon_url: "https://cdn.discordapp.com/attachments/351544209439850507/364349134611677184/e069e0e6720376e0ec7958695e9cbf33.png"
-		}
-		}});
+		inMsg.channel.send({
+			embed: {
+				color: 3447003,
+				author: {
+					name: "nhalstead",
+					icon_url: "https://cdn.discordapp.com/attachments/351544209439850507/364349134611677184/e069e0e6720376e0ec7958695e9cbf33.png"
+				}
+			}
+		});
 	}
 
 	else if(inMsg.content.toLowerCase().match("^yes(.?|.{2,32})$") ) {
 		e(inMsg, "no");
 	}
 
-	else if(inMsg.content.toLowerCase() === config.prefix+"users") {
-		e(inMsg, client.users.size + " users attached to this the Bot. ("+client.guilds.size +" on this Server)");
-	}
-
 	else if (inMsg.content.toLowerCase() === config.prefix+'ping') {
 		e(inMsg, "PONG!");
 	}
-
-	else if(inMsg.content.toLowerCase() === config.prefix+"servericon") {
-		e(inMsg, 'blah');
-	}
-
-	//Echo the Auth Link to add the bot to your Server
-	else if(inMsg.content.toLowerCase() === config.prefix+"sdb") { e(inMsg, AuthLink); }
-
 
 });
 
