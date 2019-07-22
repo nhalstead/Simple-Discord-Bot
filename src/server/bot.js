@@ -7,12 +7,13 @@ const client = new Discord.Client();
 const fs = require("fs");
 const WebAdmin = require('./webadmin');
 const colors = require('colors');
+const oneliners = require("./oneliners");
 
 var webServer;
 const AuthLink = "https://discordapp.com/oauth2/authorize?&client_id=" + config.discord.appId + "&scope=bot&permissions=0";
-const listForLoading = ["Baking a cake", "Buying you a nice seafood dinner", "Recording a new mixtape"];
+
 console.log("Booting.....".bold);
-console.log("Please wait,", random(listForLoading));
+console.log("Please wait,", random(oneliners.loading));
 
 // Single One and Done Actions after the Bot has been started and checked in with the Discord API Servers.
 client.on('ready', () => {
