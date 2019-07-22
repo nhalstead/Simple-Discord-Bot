@@ -10,7 +10,6 @@ const colors = require('colors');
 
 var webServer;
 const AuthLink = "https://discordapp.com/oauth2/authorize?&client_id=" + config.discord.appId + "&scope=bot&permissions=0";
-
 const listForLoading = ["Baking a cake", "Buying you a nice seafood dinner", "Recording a new mixtape"];
 console.log("Booting.....".bold);
 console.log("Please wait,", random(listForLoading));
@@ -108,10 +107,7 @@ client.on('message', inMsg => {
 	}
 
 	// It's good practice to ignore other bots.
-	if(isDM(inMsg)) {
-		console.log(`(Private) ${inMsg.author.username}: ${inMsg.content}`);
-	}
-	else if(isBot(inMsg)) return;
+	if(isBot(inMsg)) return;
 	else if (!inMsg.guild) { //Checking if it from a server or from a PM
 		m(inMsg.author.username + " #" + inMsg.author.discriminator + ": " + inMsg.content); //optional
 

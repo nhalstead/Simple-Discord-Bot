@@ -65,3 +65,5 @@ typings/
 package-lock.json
 src/config/local.js
 .idea/workspace.xml
+src/data/guilds
+src/data/users

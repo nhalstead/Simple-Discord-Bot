@@ -1,11 +1,18 @@
 'use strict';
 const config = require('../config');
-const {d, e, c } = require('../server/tools');
+const {d, e, c, messageAuthor, messageValue, isDM } = require('../server/tools');
 
 module.exports = function(client) {
 
 	client.on('message', inMsg => {
-		d(inMsg.author.id + " " + inMsg.content);
+		if(messageAuthor(inMsg).id !== config.discord.appId){
+			if(isDM(inMsg)) {
+				d('(Private) ' + messageAuthor(inMsg).id + ': ' + messageValue(inMsg));
+			}
+			else {
+				d(messageAuthor(inMsg).id + " " + inMsg.content);
+			}
+		}
 	});
 
 };

@@ -229,6 +229,17 @@ module.exports =  {
 	 */
 	replyInPM: (message, response, options = undefined) => {
 		message.author.send(response, options);
+	},
+
+	/**
+	 * Get the Author of an incoming Message
+	 * This will take any of the Channel Types, DMChannel, GroupDMChannel, TextChannel
+	 *
+	 * @param {Message} message Message Object
+	 * @return {GuildMember} Author of the Message
+	 */
+	messageAuthor: (message) => {
+		return message.author;
 	}
 
 };
