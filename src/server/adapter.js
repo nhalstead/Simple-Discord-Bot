@@ -1,5 +1,6 @@
 const _ = require('lodash');
 const colors = require('colors');
+const { DMChannel, GroupDMChannel } = require("discord.js");
 
 module.exports = function (client, webServer, config) {
 
@@ -70,9 +71,20 @@ module.exports = function (client, webServer, config) {
 				 	  if(inMsg.author.bot === true) return;
 
 				 	  let props = {
+				 	  	id: inMsg.id,
 					    content: inMsg.content,
 					    message: inMsg,
 					    user: inMsg.author,
+					    server: inMsg.guid, // If its in a Server
+					    channel: inMsg.channel,
+					    url: inMsg.url,
+					    attachments: inMsg.attachments,
+					    react: (emoji) => { return inMsg.react(emoji) },
+					    pin: () => { return  inMsg.pin() },
+					    unpin: () => { return  inMsg.unpin() },
+					    viaWebhook: !!(inMsg.webhookID),
+					    hasAttachments: (inMsg.attachments.array().length !== 0),
+					    isDm: (inMsg.channel instanceof DMChannel || inMsg.channel instanceof GroupDMChannel),
 					    del: () => { (inMsg.deletable) ? inMsg.delete() : false },
 					    reply: (response, options) => { return inMsg.channel.send(response, options); },
 					    pm: (response, options) => { return inMsg.author.send(response, options); }
