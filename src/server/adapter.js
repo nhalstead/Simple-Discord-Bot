@@ -1,6 +1,5 @@
 const _ = require('lodash');
 const colors = require('colors');
-const {replyInPM, deleteMessage, reply} = require("./tools");
 
 module.exports = function (client, webServer, config) {
 
@@ -74,7 +73,7 @@ module.exports = function (client, webServer, config) {
 					    content: inMsg.content,
 					    message: inMsg,
 					    user: inMsg.author,
-					    del: () => { return deleteMessage(inMsg) },
+					    del: () => { (inMsg.deletable) ? inMsg.delete() : false },
 					    reply: (response, options) => { return inMsg.channel.send(response, options); },
 					    pm: (response, options) => { return inMsg.author.send(response, options); }
 				    }
