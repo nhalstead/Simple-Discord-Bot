@@ -6,7 +6,7 @@ const {messageValue, deleteMessage, reply } = require('../server/tools');
 const max = 100;
 const simple = 10;
 
-module.exports = (client) => {
+module.exports = (client, adapter) => {
 
 	client.on('message', inMsg => {
 		let msg = messageValue(inMsg);
@@ -16,7 +16,11 @@ module.exports = (client) => {
 
 			if(msgT === undefined || msgT === ""){
 				// No Number Defined, default to 10
-				inMsg.channel.bulkDelete(simple);
+				inMsg.channel.bulkDelete(simple)
+					.catch((err) => {
+						adapter.log("Failed to process Bulk Delete", err.message)
+						reply(inMsg, err.message)
+					});
 			}
 			else {
 				if(isNaN(parseInt(msgT))) {
@@ -25,11 +29,16 @@ module.exports = (client) => {
 				else {
 					let count = parseInt(msgT);
 					count++; // Add one to delete the last message as well.
-					if(10 > max) {
-						// Hard Max Reset
+					if(count > max) {
+						// Hard Max Reset, REST API is 100.
 						count = max;
 					}
-					inMsg.channel.bulkDelete(count);
+					// You can only bulk delete messages that are under 14 days old.
+					inMsg.channel.bulkDelete(count)
+						.catch((err) => {
+							adapter.log("Failed to process Bulk Delete", err.message)
+							reply(inMsg, err.message)
+						});
 				}
 			}
 

@@ -1,13 +1,12 @@
 'use strict';
-const config = require('../config');
-const {d, e, c } = require('../server/tools');
 
 const interval = 10; // seconds
 
-var localClient;
+var localAdapter;
 var tim; // Timer
 var page = 1;
 const lastPage = 5;
+var isPaused = false;
 
 /**
  * Set the Bot's `Playing` message.
@@ -16,25 +15,29 @@ const lastPage = 5;
  * @param {Object} options Values to Pass to the Client
  *    type: [PLAYING, STREAMING, LISTENING, WATCHING]
  */
-const set = (text, options = {}) => {
-	localClient.user.setActivity(text, options);
+const set = (text, type) => {
+	if(isPaused == false) {
+		localAdapter.setBotStatus(text, type);
+	}
 };
 
 const update = () => {
+	if(isPaused) return; // Skip since its paused.
+
 	if(page === 1) {
-		set(localClient.users.size + ' Users', { type: 'LISTENING' });
+		set(localAdapter.getTotalServers() + ' Users', 'LISTENING');
 	}
 	else if(page === 2){
-		set('with ' + localClient.guilds.size + ' servers', { type: 'PLAYING' });
+		set('with ' + localAdapter.getTotalServers() + ' servers', 'PLAYING');
 	}
 	else if(page === 3){
-		set('Johnny 5 is alive!', { type: 'WATCHING' });
+		set('Johnny 5 is alive!', 'WATCHING');
 	}
 	else if(page === 4){
-		set('No, I am not on Discord', { type: 'WATCHING' });
+		set('No, I am not on Discord', 'WATCHING');
 	}
 	else if(page === 5){
-		set('Testing123', { type: 'LISTENING' });
+		set('Testing123', 'LISTENING');
 	}
 
 	page++; // Get Ready for the next Page.
@@ -44,9 +47,22 @@ const update = () => {
 };
 
 
-module.exports = function(client) {
-	localClient = client;
+module.exports = function(client, adapter) {
+	localAdapter = adapter;
+	isPaused = false;
 	tim = setInterval(update, interval*1000);
-	update();
 
+	adapter.onAuthenticatedRoute('GET', '/messageRotate/stop', (req, res) => {
+		isPaused = true;
+		console.log("Status Update Paused")
+		res.send({success: true});
+	});
+
+	adapter.onAuthenticatedRoute('GET', '/messageRotate/start', (req, res) => {
+		isPaused = false;
+		console.log("Status Update Resumed")
+		res.send({success: true});
+	});
+
+	update();
 };

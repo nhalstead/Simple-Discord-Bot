@@ -1,6 +1,5 @@
 'use strict';
-const config = require('../config');
-const {messageValue, reply, random } = require('../server/tools');
+const {messageValue, reply, random, isBot} = require('../server/tools');
 
 
 /**
@@ -34,7 +33,7 @@ module.exports = function(client) {
 	client.on('message', inMsg => {
 		let msg = messageValue(inMsg).toLowerCase();
 
-		if(msg.match("(^hello|^hi|^yo|^sup|^anyone on)")) {
+		if(!isBot(inMsg) && msg.match("(^hello|^hi|^yo|^sup|^anyone on)")) {
 			reply(inMsg, random(hellos));
 		}
 

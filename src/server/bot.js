@@ -7,13 +7,14 @@ const client = new Discord.Client();
 const fs = require("fs");
 const WebAdmin = require('./webadmin');
 const colors = require('colors');
-const oneliners = require("./oneliners");
+const oneLiners = require("./oneLiners");
+const adapter = require("./adapter");
 
-var webServer;
-const AuthLink = "https://discordapp.com/oauth2/authorize?&client_id=" + config.discord.appId + "&scope=bot&permissions=0";
+var webServer; // WebServer Instance
+const AuthLink = "https://discordapp.com/oauth2/authorize?client_id=" + config.discord.appId + "&scope=bot&permissions=0";
 
 console.log("Booting.....".bold);
-console.log("Please wait,", random(oneliners.loading));
+console.log("Please wait,", random(oneLiners.loading));
 
 // Single One and Done Actions after the Bot has been started and checked in with the Discord API Servers.
 client.on('ready', () => {
@@ -38,9 +39,12 @@ client.on('ready', () => {
 
 	// Include Addons
 	console.log('** Loading Plugins **');
+	let adpaterInterface = adapter(client, webServer, config);
 	fs.readdirSync(__dirname + '\\..\\plugins').forEach(function(file) {
 		d('Loaded Plugin ' + file);
-		if(~file.indexOf('.js')) require(__dirname +'\\..\\plugins\\' + file)(client);
+		let path = __dirname +'\\..\\plugins\\' + file
+		let instance = adpaterInterface(file, path)
+		if(~file.indexOf('.js')) require(path)(client, instance);
 	});
 
 });
@@ -84,7 +88,6 @@ client.on('message', inMsg => {
 					icon_url: client.user.avatarURL,
 				},
 				title: "Commands for Simple Discord Bot",
-					url: "http://sdbot.ml/",
 					description: "List of Commands the the Bot Supports",
 					fields: [{
 						name: "`online?`",
@@ -98,11 +101,7 @@ client.on('message', inMsg => {
 						name: "`hello`",
 						value: "Says Hi back yo you!"
 					}
-				],
-				footer: {
-					icon_url: "https://cdn.discordapp.com/attachments/351544209439850507/364349134611677184/e069e0e6720376e0ec7958695e9cbf33.png",
-					text: "Simple Discord Bot by: Noah Halstead (@nhalstead)"
-				}
+				]
 			}
 		});
 	}
