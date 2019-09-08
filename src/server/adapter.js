@@ -75,6 +75,7 @@ module.exports = function (client, webServer, config) {
 					    content: inMsg.content,
 					    message: inMsg,
 					    user: inMsg.author,
+					    username: inMsg.author.username,
 					    server: inMsg.guid, // If its in a Server
 					    channel: inMsg.channel,
 					    url: inMsg.url,
