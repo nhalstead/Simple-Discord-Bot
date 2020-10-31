@@ -17,8 +17,7 @@
   "keywords": [
     "discord",
     "simple",
-    "bot",
-    "dropin"
+    "bot"
   ],
   "author": "Noah Halstead",
   "license": "The Unlicense",
@@ -32,10 +31,12 @@
     "bluebird": "^3.5.5",
     "body-parser": "^1.19.0",
     "colors": "^1.3.3",
+    "dayjs": "^1.9.4",
     "discord.js": "^11.5.1",
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "forever": "^1.0.0",
     "lodash": "^4.17.15",
-    "moment": "^2.24.0"
+    "winston": "^3.3.3"
   }
 }
