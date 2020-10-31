@@ -8,7 +8,7 @@ module.exports = (client, adapter) => {
 	 *  `onMessage` events.
 	 */
 	onMessage(({content, del, reply, url}) => {
-		if(content.toLowerCase().startsWith("delete")) {
+		if (content.toLowerCase().startsWith("delete")) {
 			del();
 			reply("Huh?");
 		}

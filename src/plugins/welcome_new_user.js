@@ -1,5 +1,5 @@
 const config = require('../config');
-const {messageValue, reply, random } = require('../server/tools');
+const {messageValue, reply, random} = require('../server/tools');
 
 const messages = [
 	"{{username}} just joined. Everyone, look busy!",
@@ -42,11 +42,11 @@ const messages = [
 	"Roses are red, violets are blue, {{username}} joined this server with you",
 ];
 
-module.exports = function(client) {
+module.exports = function (client) {
 	client.on('guildMemberAdd', member => {
 		let msg = messageValue(inMsg).toLowerCase();
 
-		if(msg.match("(^hello|^hi|^yo|^sup|^anyone on)")) {
+		if (msg.match("(^hello|^hi|^yo|^sup|^anyone on)")) {
 			reply(inMsg, random(messages).replace("{{username}}", inMsg.author));
 		}
 

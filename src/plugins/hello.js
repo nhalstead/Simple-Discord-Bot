@@ -29,11 +29,11 @@ const hellos = [
 	"God dag" // Norwegian, Swedish
 ];
 
-module.exports = function(client) {
+module.exports = function (client) {
 	client.on('message', inMsg => {
 		let msg = messageValue(inMsg).toLowerCase();
 
-		if(!isBot(inMsg) && msg.match("(^hello|^hi|^yo|^sup|^anyone on)")) {
+		if (!isBot(inMsg) && msg.match("(^hello|^hi|^yo|^sup|^anyone on)")) {
 			reply(inMsg, random(hellos));
 		}
 

@@ -1,15 +1,14 @@
 'use strict';
 const config = require('../config');
 
-module.exports = function(client) {
+module.exports = function (client) {
 
 	let u = client.user; // {ClientUser}
-	if(u !== undefined) {
+	if (u !== undefined) {
 		// {PresenceStatus}
 		// online, idle, offline, dnd
 		u.setStatus("idle");
-	}
-	else {
+	} else {
 		console.log("Client User undefined")
 	}
 
