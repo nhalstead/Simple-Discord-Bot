@@ -1,4 +1,5 @@
-# Simple-Discord-Bot - ReadMe
+# Simple-Discord-Bot
+
 This is just a Simple Discord Bot that runs on Node JS. 
 
-The bot is Open Source and is on GitHub for Everyone to use and Modify to their hearts content.
+The bot is open source as it's on Github for everyone to use and modify.
