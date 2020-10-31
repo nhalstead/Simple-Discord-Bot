@@ -1,9 +1,8 @@
 const fs = require("fs");
-const time = require("moment");
-const colors = require('colors');
+const dayjs = require("dayjs");
 const config = require('../config');
-const Promise = require('bluebird');
 const { DMChannel, TextChannel, GroupDMChannel } = require("discord.js");
+const logger = require("../config/logger");
 
 module.exports =  {
 	/**
@@ -12,44 +11,23 @@ module.exports =  {
 	 * @param {Message} channel Channel Object
 	 * @param {string} message Message to Send to the Channel
 	 */
-	e: (channel, message) => {
+	broadcastToChannel: (channel, message) => {
 		if (message !== "" && typeof message == "string") {
-			channel.channel.send(message);
+			channel.channel.send.debug(message);
 		} else {
-			console.log("INFO: Called to respond with nothing, Discord can not take Empty Messages!");
+			logger.warn("Called to respond with nothing, Discord can not take Empty Messages!");
 		}
 	},
 
 	/**
 	 * Send PM from a message received.
 	 *
-	 * @param {Message} Message
+	 * @param {Message} message
 	 * @param {string} response Message to send.
 	 */
-	s: (message, response) => {
+	sendMessagReply: (message, response) => {
 		if (response !== "" && typeof response == "string") {
 			message.author.send(response);
-		}
-	},
-
-	/**
-	 * Console Log as INFO message
-	 *
-	 * @param {mixed} message Value to push the console.
-	 */
-	c: (message) => {
-		console.log("INFO:", message);
-	},
-
-	/**
-	 * Console Log as DEBUG message
-	 *  this has a condition for if the env is in Debug Mode
-	 *
-	 * @param {mixed} message Value to push the console.
-	 */
-	d: (message) => {
-		if (config.debug === true) {
-			console.log(" DEBUG:".yellow, message.cyan);
 		}
 	},
 
@@ -57,11 +35,11 @@ module.exports =  {
 	 * Console Log as MSG message
 	 *  this has a condition for if it should log PM Messages
 	 *
-	 * @param {mixed} message Value to push the console.
+	 * @param {any} message Value to push the console.
 	 */
-	m: (message) => {
+	messageEvent: (message) => {
 		if (config.pmmessage === true) {
-			console.log(" MSG:".yellow, message.cyan);
+			logger.info("PM: " + message);
 		}
 	},
 
@@ -70,7 +48,7 @@ module.exports =  {
 	 * @return {string}
 	 */
 	timeD: () => {
-		return time().format('MMMM Do YYYY, h:mm:ss A');
+		return dayjs().format('MMMM Do YYYY, h:mm:ss A');
 	},
 
 	/**
@@ -78,16 +56,16 @@ module.exports =  {
 	 * @return {string} Time in the Given Format
 	 */
 	timeT: () => {
-		return time().format('MMM DD h:mm A');
+		return dayjs().format('MMM DD h:mm A');
 	},
 
 	/**
 	 * Get time in UTC format
 	 *
-	 * @return {string} Time in the UTC Timezone.
+	 * @return {number} Time in the UTC Timezone.
 	 */
 	timeUTC: () => {
-		return time.duration("12:10:12: PM", "HH:mm:ss: A").asSeconds();
+		return dayjs.duration("12:10:12: PM", "HH:mm:ss: A").asSeconds();
 	},
 
 	/**
@@ -101,7 +79,7 @@ module.exports =  {
 			let content = fs.readFileSync(fileLocation);
 			return JSON.parse(content);
 		} catch (e) {
-			d("importJson Error, Error Reading " + fileLocation);
+			logger.debug("importJson Error, Error Reading " + fileLocation);
 			return false;
 		}
 	},
@@ -121,8 +99,8 @@ module.exports =  {
 	 *
 	 *
 	 * @link https://stackoverflow.com/a/21294619
-	 * @param {} i
-	 * @return {}
+	 * @param {number} i
+	 * @return {string}
 	 */
 	m2ms: (i) => {
 		var m = Math.floor(i / 60000);
@@ -135,7 +113,7 @@ module.exports =  {
 	 *
 	 * @link https://stackoverflow.com/a/24137301
 	 * @param {Object} list Object that has many items in it.
-	 * @return {Mixed} Return any Random Element from a List
+	 * @return {any} Return any Random Element from a List
 	 */
 	random: (list) => {
 		return list[Math.floor((Math.random() * list.length))];
@@ -186,7 +164,7 @@ module.exports =  {
 	 * Get Message Value
 	 *
 	 * @param {Message} message Discord Message
-	 * @return {Boolean} Is the message from a Robot
+	 * @return {string} Message Contnet
 	 */
 	messageValue: (message) => {
 		return message.content;
@@ -200,7 +178,7 @@ module.exports =  {
 	 * @return {Boolean} If the message was deleted
 	 */
 	deleteMessage: async (message) => {
-		if (message.deletable == true) {
+		if (message.deletable === true) {
 			await message.delete();
 			return true;
 		}
@@ -216,7 +194,7 @@ module.exports =  {
 	 * @param {MessageOptions, Attachment, RichEmbed} options See https://discord.js.org/#/docs/main/stable/class/TextChannel?scrollTo=send
 	 */
 	reply: (message, response, options = undefined) => {
-		message.channel.send(response, options);
+		return message.channel.send(response, options);
 	},
 
 	/**
@@ -228,7 +206,7 @@ module.exports =  {
 	 * @param {MessageOptions, Attachment, RichEmbed} options See https://discord.js.org/#/docs/main/stable/class/TextChannel?scrollTo=send
 	 */
 	replyInPM: (message, response, options = undefined) => {
-		message.author.send(response, options);
+		return message.author.send(response, options);
 	},
 
 	/**

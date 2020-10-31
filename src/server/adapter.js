@@ -1,11 +1,11 @@
 const _ = require('lodash');
-const colors = require('colors');
 const { DMChannel, GroupDMChannel } = require("discord.js");
+const logger = require("../config/logger");
 
 module.exports = function (client, webServer, config) {
 
 	return function (pluginName, pluginPath) {
-		let easyFunc = {
+		return {
 			/**
 			 * Add Command to the Help Index
 			 *
@@ -67,31 +67,43 @@ module.exports = function (client, webServer, config) {
 			 * @param {function} cb Callback for the function
 			 */
 			onMessage: (cb) => {
-				 client.on("message", inMsg => {
-				 	  if(inMsg.author.bot === true) return;
+				client.on("message", inMsg => {
+					if (inMsg.author.bot === true) return;
 
-				 	  let props = {
-				 	  	id: inMsg.id,
-					    content: inMsg.content,
-					    message: inMsg,
-					    user: inMsg.author,
-					    username: inMsg.author.username,
-					    server: inMsg.guid, // If its in a Server
-					    channel: inMsg.channel,
-					    url: inMsg.url,
-					    attachments: inMsg.attachments,
-					    react: (emoji) => { return inMsg.react(emoji) },
-					    pin: () => { return  inMsg.pin() },
-					    unpin: () => { return  inMsg.unpin() },
-					    viaWebhook: !!(inMsg.webhookID),
-					    hasAttachments: (inMsg.attachments.array().length !== 0),
-					    isDm: (inMsg.channel instanceof DMChannel || inMsg.channel instanceof GroupDMChannel),
-					    del: () => { (inMsg.deletable) ? inMsg.delete() : false },
-					    reply: (response, options) => { return inMsg.channel.send(response, options); },
-					    pm: (response, options) => { return inMsg.author.send(response, options); }
-				    }
-				 	  cb(props)
-				 })
+					let props = {
+						id: inMsg.id,
+						content: inMsg.content,
+						message: inMsg,
+						user: inMsg.author,
+						username: inMsg.author.username,
+						server: inMsg.guid, // If its in a Server
+						channel: inMsg.channel,
+						url: inMsg.url,
+						attachments: inMsg.attachments,
+						react: (emoji) => {
+							return inMsg.react(emoji)
+						},
+						pin: () => {
+							return inMsg.pin()
+						},
+						unpin: () => {
+							return inMsg.unpin()
+						},
+						viaWebhook: !!(inMsg.webhookID),
+						hasAttachments: (inMsg.attachments.array().length !== 0),
+						isDm: (inMsg.channel instanceof DMChannel || inMsg.channel instanceof GroupDMChannel),
+						del: () => {
+							(inMsg.deletable) ? inMsg.delete() : false
+						},
+						reply: (response, options) => {
+							return inMsg.channel.send(response, options);
+						},
+						pm: (response, options) => {
+							return inMsg.author.send(response, options);
+						}
+					}
+					cb(props)
+				})
 			},
 
 			/**
@@ -99,6 +111,8 @@ module.exports = function (client, webServer, config) {
 			 *
 			 */
 			onAuthenticatedRoute: (method, path, cb) => {
+				if (!webServer) return false;
+
 				method = method.toLowerCase();
 				// The route is one of the following methods, and is not in the root of `/_plugin`
 				if (['get', 'post', 'put', 'delete'].includes(method) && !['', '/'].includes(path)) {
@@ -167,14 +181,13 @@ module.exports = function (client, webServer, config) {
 			/**
 			 * Log
 			 *
-			 * @param {string} Message to Log
+			 * @param {string} message Message to Log
 			 */
 			log: (message) => {
-				console.log("  INFO:".magenta, message.magenta);
+				logger.debug(pluginName + ": " + message);
 			}
 
-		}
-		return easyFunc;
+		};
 	}
 
 }

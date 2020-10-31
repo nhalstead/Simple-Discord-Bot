@@ -1,68 +1,68 @@
 'use strict';
 
 const config = require('../config');
-const { timeD, d, e, is_root, c, m, m2ms, s, random, isDM, isBot, timeT } = require('./tools');
+const { timeD, d, broadcastToChannel, is_root, c, messageEvent, m2ms, sendMessagReply, random, isDM, isBot, timeT } = require('./tools');
 const Discord = require("discord.js");
 const client = new Discord.Client();
 const fs = require("fs");
+const path = require("path");
 const WebAdmin = require('./webadmin');
-const colors = require('colors');
 const oneLiners = require("./oneLiners");
 const adapter = require("./adapter");
+const logger = require("../config/logger");
 
-var webServer; // WebServer Instance
+let webServer; // WebServer Instance
 const AuthLink = "https://discordapp.com/oauth2/authorize?client_id=" + config.discord.appId + "&scope=bot&permissions=0";
 
-console.log("Booting.....".bold);
-console.log("Please wait,", random(oneLiners.loading));
+logger.debug("Booting.....");
+logger.debug("Please wait, " + random(oneLiners.loading));
 
 // Single One and Done Actions after the Bot has been started and checked in with the Discord API Servers.
 client.on('ready', () => {
-	console.log(` Logged in as ${client.user.tag}! `.underline.black.bgCyan);
-	
+	logger.info(`Logged in as ${client.user.tag}!`);
+
 	if(config.debug) {
 		let count = 0;
 		client.guilds.map(() => {
 			count++;
 		});
-		console.log("Debug Mode Enabled!".red);
-		console.log(("DEBUG START TIME: " + timeD()).red);
-		console.log(("Active in " + count + " servers").red);
-		d("Add me to your Server! - " + AuthLink);
+		logger.debug("Debug Mode Enabled!");
+		logger.debug("Active in " + count + " servers");
+		logger.debug("Add me to your Server! - " + AuthLink);
 	}
-	console.log(" Bot: Online! ".black.bgCyan);
+	logger.debug("Bot: Online!");
 
 	if(config.webAdmin.enabled === true){
-		console.log(" Web Server Enabled. ".black.bgCyan);
+		logger.info("Web Server Enabled.");
 		webServer = WebAdmin(client);
 	}
 
 	// Include Addons
-	console.log('** Loading Plugins **');
-	let adpaterInterface = adapter(client, webServer, config);
-	fs.readdirSync(__dirname + '\\..\\plugins').forEach(function(file) {
-		d('Loaded Plugin ' + file);
-		let path = __dirname +'\\..\\plugins\\' + file
-		let instance = adpaterInterface(file, path)
-		if(~file.indexOf('.js')) require(path)(client, instance);
+	logger.debug('** Loading Plugins **');
+	let adapterInterface = adapter(client, webServer, config);
+	fs.readdirSync(path.join(__dirname, '..', 'plugins')).forEach((file) => {
+		logger.debug('Loaded Plugin ' + file);
+		let loadPath = path.join(__dirname, '..', 'plugins', file);
+		let instance = adapterInterface(file, loadPath)
+		if(~file.indexOf('.js')) require(loadPath)(client, instance);
 	});
 
 });
 
-client.on("error", console.log);
+client.on("error", logger.error);
 
 client.on('message', inMsg => {
 
 	// Selected Auth
 	if(is_root(inMsg.author.id)){
 		if (inMsg.content.toLowerCase() === 'bot.stop') {
-			e(inMsg, "Ok, Bye :crying_cat_face:");
-			c("Shutdown Command Recived by " + inMsg.author.username + "#" + inMsg.author.discriminator);
+			broadcastToChannel(inMsg, "Ok, Bye :crying_cat_face:");
+			logger.debug("Shutdown Command Recived by " + inMsg.author.username + "#" + inMsg.author.discriminator);
 			setTimeout(function(){ process.exit(); }, 1000);
 		}
 
 		else if(inMsg.content.toLowerCase().startsWith("bot.status") === true) {
-			d("Changing Message");
+			logger.debug("Changing Message");
 			var str = inMsg.content.replace("/^(bot\.status)\s{0,2}/", "");
 			client.user.setActivity(str);
 			return;
@@ -109,9 +109,9 @@ client.on('message', inMsg => {
 	// It's good practice to ignore other bots.
 	if(isBot(inMsg)) return;
 	else if (!inMsg.guild) { //Checking if it from a server or from a PM
-		m(inMsg.author.username + " #" + inMsg.author.discriminator + ": " + inMsg.content); //optional
+		messageEvent(inMsg.author.username + " #" + inMsg.author.discriminator + ": " + inMsg.content);
 
-		if(!is_root(inMsg.author.id)){
+		if(!is_root(inMsg.author.id)) {
 			return; // Comment out to Allow for Commands to be Run via the PMs.
 		}
 	}
@@ -119,19 +119,19 @@ client.on('message', inMsg => {
 
 	// Text Based Commands
 	else if (inMsg.content.toLowerCase() === 'online?') {
-		e(inMsg, "Yup, I have been on for " + m2ms(client.uptime));
+		broadcastToChannel(inMsg, "Yup, I have been on for " + m2ms(client.uptime));
 	}
 
 	else if (inMsg.content.toLowerCase().includes("...")) {
-		e(inMsg, "...");
+		broadcastToChannel(inMsg, "...");
 	}
 
 	else if (inMsg.content.toLowerCase().match("(^time|^what time is it|^"+config.prefix+"bottime)")) {
-		e(inMsg, "It is " + timeT());
+		broadcastToChannel(inMsg, "It is " + timeT());
 	}
 
 	else if (inMsg.content.toLowerCase().match("meep")) {
-		e(inMsg, "...");
+		broadcastToChannel(inMsg, "...");
 	}
 
 	else if(inMsg.content.toLowerCase() === config.prefix+"credit") {
@@ -147,11 +147,11 @@ client.on('message', inMsg => {
 	}
 
 	else if(inMsg.content.toLowerCase().match("^yes(.?|.{2,32})$") ) {
-		e(inMsg, "no");
+		broadcastToChannel(inMsg, "no");
 	}
 
 	else if (inMsg.content.toLowerCase() === config.prefix+'ping') {
-		e(inMsg, "PONG!");
+		broadcastToChannel(inMsg, "PONG!");
 	}
 
 });
@@ -159,11 +159,11 @@ client.on('message', inMsg => {
 
 client.login(config.discord.token)
 	.then(function() {
-		console.log("Authentication Complete!".green);
+		logger.debug("Authentication Complete!");
 	})
 	.catch(function(err) {
-		console.log('Authentication Failed!'.red);
-		c("Error During Authentication!" + " ~ " + JSON.stringify(err));
+		logger.debug('Authentication Failed!'.red);
+		logger.error("Error During Authentication!" + " ~ " + JSON.stringify(err));
 		client.destroy()
 			.then(()=> {
 				process.exit();

@@ -1,12 +1,9 @@
-const fs = require("fs");
-const time = require("moment");
-const colors = require('colors');
 const express = require('express');
 const app = express();
 const config = require('../config');
-const Promise = require('bluebird');
 const { getServers, getServerBundle } = require('./services/servers.js');
 const bodyParser = require('body-parser');
+const logger = require("../config/logger");
 
 module.exports = function(client){
 
@@ -37,11 +34,9 @@ module.exports = function(client){
 		res.json(serverList);
 	});
 
-
-
 	let port = config.webAdmin.port || 8898;
 	app.listen(port,  ()=> {
-		console.log(`WebAdmin Port Running on port ${port}`);
+		logger.info(`WebAdmin Port Running on port ${port}`);
 	})
 	return app;
 };
