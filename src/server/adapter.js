@@ -1,5 +1,5 @@
 const _ = require('lodash');
-const { DMChannel, GroupDMChannel } = require("discord.js");
+const {DMChannel, GroupDMChannel} = require("discord.js");
 const logger = require("../config/logger");
 
 module.exports = function (client, webServer, config) {

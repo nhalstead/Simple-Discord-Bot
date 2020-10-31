@@ -35,4 +35,5 @@ class StorageDriver {
 	}
 
 }
+
 module.exports = StorageDriver;

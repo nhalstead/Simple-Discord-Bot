@@ -14,7 +14,7 @@ class FileDriver extends StorageDriver {
 	constructor(path) {
 		super();
 		this.path = path;
-		if (!fs.existsSync(this.path)){
+		if (!fs.existsSync(this.path)) {
 			console.log("Path does not exist!", this.path);
 		}
 	}
@@ -29,8 +29,7 @@ class FileDriver extends StorageDriver {
 		try {
 			let fLocation = path.resolve(this.path, key);
 			return fs.readFileSync(fLocation);
-		}
-		catch(e){
+		} catch (e) {
 		}
 	}
 

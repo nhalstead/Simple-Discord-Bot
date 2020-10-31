@@ -1,10 +1,10 @@
 const fs = require("fs");
 const dayjs = require("dayjs");
 const config = require('../config');
-const { DMChannel, TextChannel, GroupDMChannel } = require("discord.js");
+const {DMChannel, TextChannel, GroupDMChannel} = require("discord.js");
 const logger = require("../config/logger");
 
-module.exports =  {
+module.exports = {
 	/**
 	 * Echo to Channel
 	 *
@@ -104,7 +104,7 @@ module.exports =  {
 	 */
 	m2ms: (i) => {
 		var m = Math.floor(i / 60000);
-		var s = ((i%60000)/1000).toFixed(0);
+		var s = ((i % 60000) / 1000).toFixed(0);
 		return m + ":" + (s < 10 ? '0' : '') + s;
 	},
 
@@ -136,16 +136,13 @@ module.exports =  {
 	 * @return {String} Message type, Returns String from the constants.js file.
 	 */
 	messageType: (message) => {
-		if(message.channel instanceof DMChannel) {
+		if (message.channel instanceof DMChannel) {
 			return "dm";
-		}
-		else if (message.channel instanceof GroupDMChannel) {
+		} else if (message.channel instanceof GroupDMChannel) {
 			return "dm";
-		}
-		else if (message.channel instanceof TextChannel) {
+		} else if (message.channel instanceof TextChannel) {
 			return "channel";
-		}
-		else {
+		} else {
 			return "";
 		}
 	},

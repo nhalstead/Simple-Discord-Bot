@@ -18,11 +18,10 @@ module.exports = {
 	getGuildData: (server, key, def = undefined) => {
 		let lookup_token = server.id + "_" + key;
 		let result = driverGuilds.get(lookup_token);
-		
-		if(result === undefined){
+
+		if (result === undefined) {
 			return def;
-		}
-		else {
+		} else {
 			return result;
 		}
 	},
@@ -51,10 +50,9 @@ module.exports = {
 		let lookup_token = user.id + "_" + key;
 		let result = driverUsers.get(lookup_token);
 
-		if(result === undefined){
+		if (result === undefined) {
 			return def;
-		}
-		else {
+		} else {
 			return result;
 		}
 	},

@@ -32,12 +32,12 @@ const getServers = (client) => {
 const getServerBundle = (client, serverId) => {
 	let server = getServerFromList(client, serverId);
 
-	if(server === false){
+	if (server === false) {
 		return [];
 	}
 
 	let afkChannelId = [];
-	if(server.afkChannelID !== undefined) {
+	if (server.afkChannelID !== undefined) {
 		afkChannelId = server.afkChannelID;
 	}
 
@@ -63,7 +63,7 @@ const getServerBundle = (client, serverId) => {
  */
 const getServerFromList = (client, serverId) => {
 	let server = client.guilds.get(serverId);
-	if(server === undefined){
+	if (server === undefined) {
 		return false
 	}
 	return server;
@@ -105,7 +105,7 @@ const getServerMemebers = (client, server) => {
 
 	server.members.map((member) => {
 		let role = [];
-		if(member.highestRole !== undefined){
+		if (member.highestRole !== undefined) {
 			role = {
 				id: member.highestRole.id,
 				name: member.highestRole.name,

@@ -1,14 +1,14 @@
 const express = require('express');
 const app = express();
 const config = require('../config');
-const { getServers, getServerBundle } = require('./services/servers.js');
+const {getServers, getServerBundle} = require('./services/servers.js');
 const bodyParser = require('body-parser');
 const logger = require("../config/logger");
 
-module.exports = function(client){
+module.exports = function (client) {
 
 	// Parse application/x-www-form-urlencoded
-	app.use(bodyParser.urlencoded({ extended: false }));
+	app.use(bodyParser.urlencoded({extended: false}));
 
 	// Parse application/json
 	app.use(bodyParser.json());
@@ -35,7 +35,7 @@ module.exports = function(client){
 	});
 
 	let port = config.webAdmin.port || 8898;
-	app.listen(port,  ()=> {
+	app.listen(port, () => {
 		logger.info(`WebAdmin Port Running on port ${port}`);
 	})
 	return app;
