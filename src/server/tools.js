@@ -25,7 +25,7 @@ module.exports = {
 	 * @param {Message} message
 	 * @param {string} response Message to send.
 	 */
-	sendMessagReply: (message, response) => {
+	sendMessageReply: (message, response) => {
 		if (response !== "" && typeof response == "string") {
 			message.author.send(response);
 		}

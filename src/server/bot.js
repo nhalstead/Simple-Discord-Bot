@@ -1,7 +1,7 @@
 'use strict';
 
 const config = require('../config');
-const {timeD, d, broadcastToChannel, is_root, c, messageEvent, m2ms, sendMessagReply, random, isDM, isBot, timeT} = require('./tools');
+const {timeD, d, broadcastToChannel, is_root, c, messageEvent, m2ms, sendMessageReply, random, isDM, isBot, timeT} = require('./tools');
 const Discord = require("discord.js");
 const client = new Discord.Client();
 const fs = require("fs");
