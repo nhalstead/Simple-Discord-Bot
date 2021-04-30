@@ -23,7 +23,7 @@ To get the bot up and running download the source code and following the next fe
 ## Configuration
 
 To configure the bot you can use a dot env file for setup of your Bot token.
-**Do not commit your code to GitHub.**
+**Do not commit your secrets to GitHub!  Use the `.env` file!**
 
 ## How to use
 
