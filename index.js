@@ -1,6 +1,7 @@
 'use strict';
-require('babel-polyfill');
-require('babel-core/register');
+require('@babel/register');
+require('core-js/stable');
+require('regenerator-runtime/runtime');
 
-require('./src/server/bot');
+require('./src/server/bot.js');
 // Dont Change anything.
