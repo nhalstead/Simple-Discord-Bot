@@ -1,0 +1,9 @@
+{
+  "verbose": false,
+  "delay": 2500,
+  "ext": "js,env,json",
+  "ignore": [
+    "src/data",
+    "docs/*"
+  ]
+}
